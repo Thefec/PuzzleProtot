@@ -17,6 +17,7 @@ public class PuzzleManager : MonoBehaviour
     private bool isPuzzleComplete;
     private float gameTime;
     private bool isTimerRunning;
+    private int lastDisplayedSeconds = -1; // Track displayed seconds for efficient UI updates
 
     private void Start()
     {
@@ -29,9 +30,13 @@ public class PuzzleManager : MonoBehaviour
         if (isTimerRunning && !isPuzzleComplete)
         {
             gameTime += Time.deltaTime;
-            if (puzzleUI != null)
+            
+            // Only update UI when the displayed second changes
+            int currentSeconds = Mathf.FloorToInt(gameTime);
+            if (currentSeconds != lastDisplayedSeconds && puzzleUI != null)
             {
                 puzzleUI.UpdateTimer(gameTime);
+                lastDisplayedSeconds = currentSeconds;
             }
         }
     }
@@ -84,22 +89,29 @@ public class PuzzleManager : MonoBehaviour
     {
         List<PuzzlePiece> pieces = puzzleGrid.Pieces;
         int shuffleCount = pieces.Count * 3; // Number of random swaps
+        int maxAttempts = 10; // Prevent infinite recursion
+        int attempts = 0;
 
-        for (int i = 0; i < shuffleCount; i++)
+        while (attempts < maxAttempts)
         {
-            int index1 = Random.Range(0, pieces.Count);
-            int index2 = Random.Range(0, pieces.Count);
-
-            if (index1 != index2)
+            for (int i = 0; i < shuffleCount; i++)
             {
-                SwapPiecesImmediate(pieces[index1], pieces[index2]);
-            }
-        }
+                int index1 = Random.Range(0, pieces.Count);
+                int index2 = Random.Range(0, pieces.Count);
 
-        // Ensure puzzle is not already solved
-        if (CheckWinCondition())
-        {
-            ShufflePuzzle();
+                if (index1 != index2)
+                {
+                    SwapPiecesImmediate(pieces[index1], pieces[index2]);
+                }
+            }
+
+            // Ensure puzzle is not already solved
+            if (!CheckWinCondition())
+            {
+                break;
+            }
+
+            attempts++;
         }
     }
 

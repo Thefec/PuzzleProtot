@@ -12,6 +12,7 @@ public class PuzzleGrid : MonoBehaviour
     [SerializeField] private float spacing = 5f;
 
     private List<PuzzlePiece> pieces = new List<PuzzlePiece>();
+    private List<Sprite> dynamicSprites = new List<Sprite>();
     private GridLayoutGroup gridLayout;
 
     public List<PuzzlePiece> Pieces => pieces;
@@ -43,9 +44,10 @@ public class PuzzleGrid : MonoBehaviour
         gridLayout.spacing = new Vector2(spacing, spacing);
         gridLayout.childAlignment = TextAnchor.MiddleCenter;
 
-        // Calculate cell size to fit container
-        float containerWidth = gridContainer.rect.width - (spacing * (width - 1));
-        float containerHeight = gridContainer.rect.height - (spacing * (height - 1));
+        // Calculate cell size to fit container (accounting for spacing and padding)
+        RectOffset padding = gridLayout.padding;
+        float containerWidth = gridContainer.rect.width - (spacing * (width - 1)) - padding.left - padding.right;
+        float containerHeight = gridContainer.rect.height - (spacing * (height - 1)) - padding.top - padding.bottom;
         float cellWidth = containerWidth / width;
         float cellHeight = containerHeight / height;
         
@@ -66,6 +68,7 @@ public class PuzzleGrid : MonoBehaviour
                 Rect rect = new Rect(x * pieceWidth, (height - 1 - y) * pieceHeight, pieceWidth, pieceHeight);
                 Sprite pieceSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
                 pieceSprite.name = $"Piece_{index}";
+                dynamicSprites.Add(pieceSprite); // Track for cleanup
 
                 // Instantiate piece
                 GameObject pieceObj = Instantiate(piecePrefab, gridContainer);
@@ -104,6 +107,16 @@ public class PuzzleGrid : MonoBehaviour
             }
         }
         pieces.Clear();
+
+        // Clean up dynamically created sprites to prevent memory leak
+        foreach (var sprite in dynamicSprites)
+        {
+            if (sprite != null)
+            {
+                Destroy(sprite);
+            }
+        }
+        dynamicSprites.Clear();
     }
 
     /// <summary>

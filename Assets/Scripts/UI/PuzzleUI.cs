@@ -25,6 +25,11 @@ public class PuzzleUI : MonoBehaviour
     private void Start()
     {
         puzzleManager = FindFirstObjectByType<PuzzleManager>();
+        
+        if (puzzleManager == null)
+        {
+            Debug.LogError("PuzzleManager not found in scene!");
+        }
 
         if (backButton != null)
         {

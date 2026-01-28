@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
             photoDatabase = Resources.Load<PhotoDatabase>("Data/PhotoDatabase");
             if (photoDatabase == null)
             {
-                Debug.LogWarning("PhotoDatabase not found in Resources/Data/");
+                Debug.LogError("PhotoDatabase not found in Resources/Data/ - Game cannot function without it!");
             }
         }
 
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
             levelDatabase = Resources.Load<LevelDatabase>("Data/LevelDatabase");
             if (levelDatabase == null)
             {
-                Debug.LogWarning("LevelDatabase not found in Resources/Data/");
+                Debug.LogError("LevelDatabase not found in Resources/Data/ - Game cannot function without it!");
             }
         }
     }
@@ -76,6 +76,13 @@ public class GameManager : MonoBehaviour
     public void SetCurrentLevel(int levelID)
     {
         selectedLevelID = levelID;
+        
+        if (levelDatabase == null)
+        {
+            Debug.LogError("LevelDatabase is not loaded!");
+            return;
+        }
+        
         currentLevel = levelDatabase.GetLevelByID(levelID);
         
         if (currentLevel == null)

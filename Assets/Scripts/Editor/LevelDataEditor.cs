@@ -104,7 +104,14 @@ public class LevelDataEditor : Editor
     private void ParseGridSize(string gridSize, out int width, out int height)
     {
         string[] parts = gridSize.Split('x');
-        width = int.Parse(parts[0]);
-        height = int.Parse(parts[1]);
+        if (parts.Length == 2 && int.TryParse(parts[0], out width) && int.TryParse(parts[1], out height))
+        {
+            return;
+        }
+        
+        // Default fallback if parsing fails
+        Debug.LogWarning($"Failed to parse grid size: {gridSize}. Using default 3x3.");
+        width = 3;
+        height = 3;
     }
 }

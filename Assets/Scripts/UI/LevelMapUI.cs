@@ -26,6 +26,12 @@ public class LevelMapUI : MonoBehaviour
     /// </summary>
     private void GenerateLevelButtons()
     {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GameManager instance not found!");
+            return;
+        }
+
         if (GameManager.Instance.LevelDatabase == null)
         {
             Debug.LogError("LevelDatabase not found!");

@@ -14,6 +14,11 @@ public class PhotoData
     public string PhotoName => photoName;
     public Sprite PhotoSprite => photoSprite;
 
+    /// <summary>
+    /// Constructor for runtime initialization only.
+    /// Values set through constructor won't persist in Unity Inspector.
+    /// For Inspector configuration, set fields directly in the asset.
+    /// </summary>
     public PhotoData(int id, string name, Sprite sprite)
     {
         this.id = id;

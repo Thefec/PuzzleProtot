@@ -38,7 +38,10 @@ public class MainMenuUI : MonoBehaviour
 
     private void OnStartClicked()
     {
-        SceneLoader.Instance.LoadLevelMap();
+        if (SceneLoader.Instance != null)
+        {
+            SceneLoader.Instance.LoadLevelMap();
+        }
     }
 
     private void OnSettingsClicked()
@@ -51,7 +54,10 @@ public class MainMenuUI : MonoBehaviour
 
     private void OnExitClicked()
     {
-        SceneLoader.Instance.QuitGame();
+        if (SceneLoader.Instance != null)
+        {
+            SceneLoader.Instance.QuitGame();
+        }
     }
 
     /// <summary>
