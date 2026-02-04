@@ -9,7 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c214c61560424f59c2cfa2606c2a290d, type: 3}
+  m_Script: {fileID: 11500000, guid: 89ca5579d2cf55a4f9a7be5c450995ad, type: 3}
   m_Name: PhotoDatabase
   m_EditorClassIdentifier: 
-  photos: []
+  photos:
+  - id: 0
+    photoName: Puzzle1
+    photoSprite: {fileID: 21300000, guid: 8b24374790a6bfc7c6ce442f3ad3efdf, type: 3}
+  - id: 1
+    photoName: Puzzle2
+    photoSprite: {fileID: 21300000, guid: bc8b673f14c26f3cc323f01aa655235f, type: 3}
+  - id: 2
+    photoName: Puzzle3
+    photoSprite: {fileID: 21300000, guid: 3c7e28b91482162e5ddbd4446eb6e085, type: 3}
+  - id: 3
+    photoName: test1
+    photoSprite: {fileID: 21300000, guid: 44bd36d57af21da4aa21558b1eb1d5ed, type: 3}

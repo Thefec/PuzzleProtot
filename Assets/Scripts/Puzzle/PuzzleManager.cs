@@ -86,34 +86,55 @@ public class PuzzleManager : MonoBehaviour
     /// Shuffle puzzle pieces ensuring solvability
     /// </summary>
     private void ShufflePuzzle()
+{
+    List<PuzzlePiece> pieces = puzzleGrid.Pieces;
+    
+    if (pieces == null || pieces.Count == 0)
     {
-        List<PuzzlePiece> pieces = puzzleGrid.Pieces;
-        int shuffleCount = pieces.Count * 3; // Number of random swaps
-        int maxAttempts = 10; // Prevent infinite recursion
-        int attempts = 0;
-
-        while (attempts < maxAttempts)
-        {
-            for (int i = 0; i < shuffleCount; i++)
-            {
-                int index1 = Random.Range(0, pieces.Count);
-                int index2 = Random.Range(0, pieces.Count);
-
-                if (index1 != index2)
-                {
-                    SwapPiecesImmediate(pieces[index1], pieces[index2]);
-                }
-            }
-
-            // Ensure puzzle is not already solved
-            if (!CheckWinCondition())
-            {
-                break;
-            }
-
-            attempts++;
-        }
+        Debug.LogError("Cannot shuffle - pieces list is empty!");
+        return;
     }
+
+    int shuffleCount = pieces.Count * 5; // Daha fazla karıştırma
+    int maxAttempts = 20; // Daha fazla deneme
+    int attempts = 0;
+
+    Debug.Log($"Starting shuffle with {pieces.Count} pieces...");
+
+    while (attempts < maxAttempts)
+    {
+        // Rastgele swap'ler yap
+        for (int i = 0; i < shuffleCount; i++)
+        {
+            int index1 = Random.Range(0, pieces.Count);
+            int index2 = Random.Range(0, pieces.Count);
+
+            if (index1 != index2)
+            {
+                SwapPiecesImmediate(pieces[index1], pieces[index2]);
+            }
+        }
+
+        // Puzzle zaten çözülmüş mü kontrol et
+        if (!CheckWinCondition())
+        {
+            Debug.Log($"Puzzle shuffled successfully after {attempts + 1} attempts");
+            break;
+        }
+
+        attempts++;
+        Debug.Log($"Shuffle attempt {attempts} - puzzle still solved, trying again...");
+    }
+
+    if (attempts >= maxAttempts)
+    {
+        Debug.LogWarning("Max shuffle attempts reached - forcing one last random swap");
+        // Son çare: Rastgele bir swap daha
+        int idx1 = Random.Range(0, pieces.Count);
+        int idx2 = (idx1 + 1) % pieces.Count;
+        SwapPiecesImmediate(pieces[idx1], pieces[idx2]);
+    }
+}
 
     /// <summary>
     /// Handle piece click
@@ -198,28 +219,17 @@ public class PuzzleManager : MonoBehaviour
     /// <summary>
     /// Swap pieces immediately (for shuffling)
     /// </summary>
-    private void SwapPiecesImmediate(PuzzlePiece piece1, PuzzlePiece piece2)
-    {
-        // Get positions
-        Vector3 pos1 = piece1.GetRectTransform().anchoredPosition;
-        Vector3 pos2 = piece2.GetRectTransform().anchoredPosition;
-
-        // Swap positions
-        piece1.GetRectTransform().anchoredPosition = pos2;
-        piece2.GetRectTransform().anchoredPosition = pos1;
-
-        // Update indices
-        int temp = piece1.CurrentIndex;
-        piece1.SetCurrentIndex(piece2.CurrentIndex);
-        piece2.SetCurrentIndex(temp);
-
-        // Swap in grid list
-        List<PuzzlePiece> pieces = puzzleGrid.Pieces;
-        int index1 = pieces.IndexOf(piece1);
-        int index2 = pieces.IndexOf(piece2);
-        pieces[index1] = piece2;
-        pieces[index2] = piece1;
-    }
+    /// <summary>
+/// Swap two pieces immediately (no animation)
+/// </summary>
+private void SwapPiecesImmediate(PuzzlePiece piece1, PuzzlePiece piece2)
+{
+    if (piece1 == null || piece2 == null)
+        return;
+    
+    // Sprite'ları değiştir
+    piece1.SwapSpriteWith(piece2);
+}
 
     /// <summary>
     /// Check if puzzle is solved

@@ -85,4 +85,26 @@ public class PuzzlePiece : MonoBehaviour
     {
         return rectTransform;
     }
+    /// <summary>
+/// Swap sprite with another piece (for shuffling)
+/// </summary>
+public void SwapSpriteWith(PuzzlePiece otherPiece)
+{
+    if (otherPiece == null || pieceImage == null)
+        return;
+    
+    Image otherImage = otherPiece.pieceImage;
+    if (otherImage == null)
+        return;
+    
+    // Swap sprites
+    Sprite tempSprite = pieceImage.sprite;
+    pieceImage.sprite = otherImage.sprite;
+    otherImage.sprite = tempSprite;
+    
+    // Swap correct indices
+    int tempCorrectIndex = correctIndex;
+    correctIndex = otherPiece.correctIndex;
+    otherPiece.correctIndex = tempCorrectIndex;
+}
 }
